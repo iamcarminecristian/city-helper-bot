@@ -1,4 +1,5 @@
 from telegram import Update
+from telegram.ext import CallbackContext
 
 def handle(update: Update):
     """Gestisce il comando /start"""
@@ -10,6 +11,7 @@ def handle(update: Update):
         'Ecco cosa posso fare per te:\n'
         '• /meteo [città] - Ottieni previsioni meteo attuali\n'
         '• /traffico [luogo] - Controlla situazione traffico\n'
-        '• /crediti - Verifica i tuoi crediti rimanenti\n\n'
+        '• /crediti - Verifica i tuoi crediti rimanenti\n'
+        '• /ricarica - Ricarica i tuoi crediti\n\n'
         'Scegli un comando e iniziamo!'
     )

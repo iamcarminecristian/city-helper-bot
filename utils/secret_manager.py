@@ -1,6 +1,7 @@
+import os
+from dotenv import load_dotenv
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
-import os
 
 class SecretManager:
     def __init__(self, key_vault_name=None):
@@ -8,9 +9,12 @@ class SecretManager:
         Inizializza il gestore dei segreti.
         Supporta sia sviluppo locale che ambiente Azure.
         """
+
+        load_dotenv()
+
         # Per sviluppo locale, usa le variabili di ambiente
         if not key_vault_name:
-            key_vault_name = os.getenv('AZURE_KEY_VAULT_NAME')
+            key_vault_name = os.getenv('AZURE-KEY-VAULT-NAME')
 
         if key_vault_name:
             # Usa Azure Key Vault in produzione/cloud
@@ -22,7 +26,7 @@ class SecretManager:
 
     def get_secret(self, secret_name, default=None):
         """
-        Recupera un segreto. 
+        Recupera un secret. 
         1. Prova da Key Vault
         2. Prova da variabili ambiente
         3. Usa default
@@ -42,5 +46,5 @@ class SecretManager:
             return default
 
         except Exception as e:
-            print(f"Errore nel recuperare il segreto {secret_name}: {e}")
+            print(f"Errore nel recuperare il secret {secret_name}: {e}")
             return default

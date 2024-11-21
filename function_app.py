@@ -1,5 +1,6 @@
 import json
 import logging
+import asyncio
 import azure.functions as func
 from telegram import Update
 from commands import start, meteo, traffico, crediti
@@ -7,17 +8,16 @@ from services.weather_service import WeatherService
 from services.traffic_service import TrafficService
 from utils.async_telegram_client import AsyncTelegramClient
 from utils.secret_manager import SecretManager
-import asyncio
+from utils.logging_utility import LoggingUtility
 
-# Configura logging
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
-logger = logging.getLogger(__name__)
+# Inizializza la classe LoggingUtility per la gestione del logging
+logging_utility = LoggingUtility()
 
-# Inizializza gestore segreti
+# Inizializza la classe SecretManager per la gestione dei secret
 secret_manager = SecretManager()
+
+# Ottieni il logger configurato
+logger = logging_utility.get_logger()
 
 # Inizializza servizi con segreti da Key Vault/env
 weather_service = WeatherService(
@@ -28,8 +28,8 @@ traffic_service = TrafficService(
 )
 
 # Configura bot token
-BOT_TOKEN = secret_manager.get_secret('TELEGRAM-BOT-TOKEN', '7877846961:AAGUw39DjiR4gtIbAxJ63-gY8FFoPs6bNMY')
-SECRET_TOKEN = secret_manager.get_secret('TELEGRAM-SECRET-TOKEN', '12345')
+BOT_TOKEN = secret_manager.get_secret('TELEGRAM-BOT-TOKEN')
+SECRET_TOKEN = secret_manager.get_secret('TELEGRAM-SECRET-TOKEN')
 
 app = func.FunctionApp()
 
