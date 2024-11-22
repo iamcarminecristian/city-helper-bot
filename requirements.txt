@@ -1,8 +1,10 @@
 azure-functions
 azure-identity
 azure-keyvault-secrets
-opencensus-ext-azure
 azure-cosmos
+azure-monitor-opentelemetry
+opencensus-ext-azure
+opentelemetry-sdk
 python-telegram-bot==20.7
 aiohttp==3.9.1
 requests==2.31.0
