@@ -1,8 +1,19 @@
 from telegram import Update
+from utils.cosmos_client import CosmosDBService
 from services.traffic_service import TrafficService
+
+db_service = CosmosDBService()
 
 def handle(update: Update, traffic_service: TrafficService):
     """Gestisce il comando /traffico"""
+    user = update.message.from_user
+    user_id = user.id
+
+    # Controlla i crediti
+    user_data = db_service.get_user(user.id)
+    if user_data['crediti'] <= 0:
+        return "⚠️ Non hai crediti sufficienti per utilizzare questo comando.\n Usa /ricarica per ottenere più crediti."
+    
     # Estrai gli argomenti del comando
     args = update.message.text.split(' ')[1:]
     if not args:
@@ -15,6 +26,9 @@ def handle(update: Update, traffic_service: TrafficService):
         # Ottieni informazioni sul traffico
         info_traffico = traffic_service.get_traffic_status(luogo)
         
+        # Sottrai 1 credito
+        db_service.delete_credits(user_id, 1)
+
         return (
             f"🚦 Situazione traffico per {luogo.capitalize()}:\n"
             f"Stato: {info_traffico['stato']}\n"

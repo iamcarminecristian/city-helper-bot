@@ -1,18 +1,17 @@
 from telegram import Update
 from telegram.ext import CallbackContext
+from utils.cosmos_client import CosmosDBService
 
 def handle(update: Update):
     """Gestisce il comando /crediti"""
+    db_service = CosmosDBService()
     user = update.message.from_user
-    
-    # In un'implementazione reale, questo valore verrebbe recuperato da un database
-    crediti_iniziali = 50
-    crediti_utilizzati = 10
-    crediti_rimanenti = crediti_iniziali - crediti_utilizzati
-    
+    user_data = db_service.get_user(user.id)
+
+    if not user_data:
+        return "Non sei ancora registrato. Usa il comando /start per iniziare."
+
     return (
         f"🏦 Crediti per {user.first_name}:\n"
-        f"• Crediti iniziali: {crediti_iniziali}\n"
-        f"• Crediti utilizzati: {crediti_utilizzati}\n"
-        f"• Crediti rimanenti: {crediti_rimanenti}"
+        f"• Crediti rimanenti: {user_data['crediti']}\n"
     )

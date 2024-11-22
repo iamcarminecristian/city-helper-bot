@@ -3,7 +3,7 @@ import logging
 import asyncio
 import azure.functions as func
 from telegram import Update
-from commands import start, meteo, traffico, crediti
+from commands import start, meteo, traffico, crediti, ricarica, helper
 from services.weather_service import WeatherService
 from services.traffic_service import TrafficService
 from utils.async_telegram_client import AsyncTelegramClient
@@ -78,6 +78,10 @@ async def handle_telegram_update(req: func.HttpRequest) -> func.HttpResponse:
                 response = traffico.handle(update, traffic_service)
             elif message_text.startswith('/crediti'):
                 response = crediti.handle(update)
+            elif message_text.startswith('/ricarica'):
+                response = ricarica.handle(update)
+            elif message_text.startswith('/help'):
+                response = helper.handle(update)
             else:
                 response = "Comando non riconosciuto. Usa /start per vedere i comandi disponibili."
         except Exception as command_error:

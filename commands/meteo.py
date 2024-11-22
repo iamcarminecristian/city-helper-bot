@@ -1,20 +1,32 @@
 from telegram import Update
+from utils.cosmos_client import CosmosDBService
 from services.weather_service import WeatherService
+
+db_service = CosmosDBService()
 
 def handle(update: Update, weather_service: WeatherService):
     """Gestisce il comando /meteo"""
-    # Estrai gli argomenti del comando
+    user = update.message.from_user
+    user_id = user.id
+
+    # Controlla i crediti
+    user_data = db_service.get_user(user.id)
+    if user_data['crediti'] <= 0:
+        return "⚠️ Non hai crediti sufficienti per utilizzare questo comando.\n Usa /ricarica per ottenere più crediti."
+
+    # Estrai gli argomenti
     args = update.message.text.split(' ')[1:]
     if not args:
         return 'Per favore specifica una città. Esempio: /meteo Roma'
 
-    # Unisci gli argomenti in un'unica città
     citta = ' '.join(args)
-    
+
     try:
-        # Ottieni le previsioni meteo
         previsioni = weather_service.get_weather(citta)
-        
+
+        # Sottrai 1 credito
+        db_service.delete_credits(user_id, 1)
+
         return (
             f"🌡️ Meteo per {citta.capitalize()}:\n"
             f"Temperatura attuale: {previsioni['temperatura']}°C\n"
