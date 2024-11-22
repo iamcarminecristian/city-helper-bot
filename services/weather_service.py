@@ -13,11 +13,15 @@ class WeatherService:
             'units': 'metric',
             'lang': 'it'
         }
-        
+
         try:
             response = requests.get(self.base_url, params=params)
-            response.raise_for_status()
             
+            # Verifica esplicita del codice 404 prima di raise_for_status
+            if response.status_code == 404:
+                raise Exception(f"Città non trovata, verifica il nome e riprova.")
+            
+            # Elaborazione della risposta
             data = response.json()
             
             return {
@@ -26,5 +30,10 @@ class WeatherService:
                 'umidita': data['main']['humidity'],
                 'vento': round(data['wind']['speed'] * 3.6, 1)  # Convert m/s to km/h
             }
+        
         except requests.RequestException as e:
+            # Gestione di altri errori come timeout, problemi di connessione, ecc.
             raise Exception(f"Errore nel recupero meteo: {str(e)}")
+        except Exception as e:
+            # Gestisce l'errore 404 e altri errori personalizzati
+            raise Exception(f"{str(e)}")

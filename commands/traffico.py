@@ -29,11 +29,17 @@ def handle(update: Update, traffic_service: TrafficService):
         # Sottrai 1 credito
         db_service.delete_credits(user_id, 1)
 
+        if info_traffico['stato'] == 'Posizione non trovata':
+            return f"⚠️ Non sono riuscito a trovare il luogo: {luogo}. Per favore, verifica che il nome sia corretto."
+        
+        if info_traffico['stato'] == 'Errore nel recupero dati':
+            return "⚠️ Si è verificato un errore nel recupero delle informazioni sul traffico. Riprova più tardi."
+
         return (
             f"🚦 Situazione traffico per {luogo.capitalize()}:\n"
             f"Stato: {info_traffico['stato']}\n"
-            f"Rallentamenti: {info_traffico['rallentamenti']} km\n"
-            f"Tempo stimato di percorrenza: {info_traffico['tempo_percorrenza']} min"
+            f"Velocita media: {info_traffico['velocita_media']} km\n"
+            f"Tempo stimato di percorrenza: {info_traffico['tempo_percorrenza']} min\n"
         )
     except Exception as e:
-        return f"Impossibile recuperare info traffico per {luogo}: {str(e)}"
+        return f"Errore: {str(e)}"

@@ -35,4 +35,4 @@ def handle(update: Update, weather_service: WeatherService):
             f"Vento: {previsioni['vento']} km/h"
         )
     except Exception as e:
-        return f"Impossibile recuperare le previsioni per {citta}: {str(e)}"
+        return f"Errore: {str(e)}"
