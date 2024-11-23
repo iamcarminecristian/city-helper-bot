@@ -106,7 +106,7 @@ TRAFFIC-API-KEY=
 ## 📂 **Project Structure**
 
 ```plaintext
-CityHelperCCBot/
+city-helper-bot/
 ├── commands/                  # Modules for handling specific commands
 ├── services/                  # Modules for integrating with APIs and databases
 ├── utils/                     # General helpers (e.g., logging, metrics)
@@ -120,7 +120,7 @@ CityHelperCCBot/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/iamcarminecristian/CityHelperCCBot.git
+   git clone https://github.com/iamcarminecristian/city-helper-bot.git
    cd CityHelperCCBot
    ```
 
