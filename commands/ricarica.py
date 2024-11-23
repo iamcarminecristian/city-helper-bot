@@ -14,4 +14,5 @@ def handle(update: Update):
 
     # Simula una ricarica
     saldo_aggiornato = db_service.update_credits(user_id, 5)
+    db_service.create_transaction(user_id, "/ricarica", 5)
     return f"💳 Hai ricaricato 5 crediti!\n Saldo attuale: {saldo_aggiornato} crediti."

@@ -1,4 +1,3 @@
-# utils/logging_utility.py
 import logging
 from opencensus.ext.azure.log_exporter import AzureLogHandler
 from opencensus.trace.samplers import AlwaysOnSampler

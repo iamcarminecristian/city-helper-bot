@@ -24,8 +24,9 @@ def handle(update: Update, weather_service: WeatherService):
     try:
         previsioni = weather_service.get_weather(citta)
 
-        # Sottrai 1 credito
+        # Sottrai 1 credito e salva la transazione
         db_service.delete_credits(user_id, 1)
+        db_service.create_transaction(user_id, "/traffico", -1)
 
         return (
             f"🌡️ Meteo per {citta.capitalize()}:\n"

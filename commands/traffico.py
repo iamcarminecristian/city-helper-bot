@@ -26,8 +26,9 @@ def handle(update: Update, traffic_service: TrafficService):
         # Ottieni informazioni sul traffico
         info_traffico = traffic_service.get_traffic_status(luogo)
         
-        # Sottrai 1 credito
+        # Sottrai 1 credito e salva la transazione
         db_service.delete_credits(user_id, 1)
+        db_service.create_transaction(user_id, "/traffico", -1)
 
         if info_traffico['stato'] == 'Posizione non trovata':
             return f"⚠️ Non sono riuscito a trovare il luogo: {luogo}. Per favore, verifica che il nome sia corretto."
