@@ -10,7 +10,7 @@ from utils.secret_manager import SecretManager
 
 class LoggingUtility:
     def __init__(self):
-        # Inizializza il gestore dei segreti
+        # Inizializza il gestore dei secret
         self.secret_manager = SecretManager()
 
         # Recupera la chiave di strumentazione da Azure Key Vault

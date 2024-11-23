@@ -29,7 +29,7 @@ class CosmosDBService:
                 "id": str(user_id),
                 "userId": str(user_id),
                 "username": username,
-                "crediti": 50,
+                "crediti": 10,
                 "createdAt": datetime.utcnow().isoformat(),
                 "updatedAt": datetime.utcnow().isoformat()
             })
@@ -50,6 +50,7 @@ class CosmosDBService:
             user["crediti"] += qty
             user["updatedAt"] = datetime.utcnow().isoformat()
             self.container.upsert_item(user)
+        return user["crediti"]
 
     def delete_credits(self, user_id, qty):
         """Deduce un credito quando un comando viene utilizzato"""

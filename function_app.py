@@ -36,7 +36,7 @@ app = func.FunctionApp()
 
 @app.route(route="main", auth_level=func.AuthLevel.ANONYMOUS)
 @track_function_execution(logging_utility)
-async def handle_telegram_update(req: func.HttpRequest) -> func.HttpResponse:
+async def city_helper_bot_main(req: func.HttpRequest) -> func.HttpResponse:
     """Gestore asincrono degli update di Telegram"""
     try:
         # Verifica secret token
@@ -81,7 +81,7 @@ async def handle_telegram_update(req: func.HttpRequest) -> func.HttpResponse:
             elif message_text.startswith('/help'):
                 response = helper.handle(update)
             else:
-                response = "Comando non riconosciuto. Usa /start per vedere i comandi disponibili."
+                response = "Comando non riconosciuto. Usa /help per vedere i comandi disponibili."
         except Exception as command_error:
             logger.error(f"Errore nell'elaborazione del comando: {command_error}")
             response = "Si è verificato un errore durante l'elaborazione del comando."

@@ -12,6 +12,6 @@ def handle(update: Update):
     if not user_data:
         return "Non sei ancora registrato. Usa il comando /start per iniziare."
 
-    # Simula una ricarica (aggiunge 20 crediti)
-    db_service.update_credits(user_id, 20)
-    return f"💳 Hai ricaricato 20 crediti!\n Saldo attuale: {user_data['crediti']} crediti."
+    # Simula una ricarica
+    saldo_aggiornato = db_service.update_credits(user_id, 5)
+    return f"💳 Hai ricaricato 5 crediti!\n Saldo attuale: {saldo_aggiornato} crediti."
