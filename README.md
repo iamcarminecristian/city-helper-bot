@@ -10,30 +10,28 @@ Create a simple and intuitive urban assistance system that allows users to acces
 ## 🚀 **Main Features**
 
 1. **Weather Forecast**:  
-   - Command: `/weather [city]`  
-   - Example: `/weather Rome`  
+   - Command: `/meteo [city]`  
+   - Example: `/meteo Roma`  
    - Provides detailed weather forecasts for the specified city.
 
 2. **Real-Time Traffic Monitoring**:  
-   - Command: `/traffic [city]`  
-   - Example: `/traffic Milan`  
+   - Command: `/traffico [city]`  
+   - Example: `/traffico Milano`  
    - Returns real-time updates on urban traffic conditions.
 
 3. **Credit Management**:  
-   - **Add credits**: `/recharge` (adds 5 credits).  
-   - **Credit consumption**: each `/weather` and `/traffic` command reduces credits by 1.  
+   - **Add credits**: `/ricarica` (adds 5 credits).  
+   - **Credit consumption**: each `/meteo` and `/traffico` command reduces credits by 1.  
    - Credit balance included in the responses.
 
 4. **Authentication via Azure Entra ID**:  
-   - Users authenticate through Azure Entra ID to access features.
-   - New users can register directly via a dedicated registration link if they are not already registered.
+   - Authentication and registration are managed through a custom flow in Azure Entra ID.
+   - Unauthenticated users are redirected to a custom link generated and managed by Azure Entra ID to complete the authentication/registration process.
+   - Once authenticated, users can access all bot features seamlessly.
 
 5. **Request Tracking**:  
    - Detailed logs for user, date, and request type.  
    - Error and anomaly monitoring through **Azure Monitor** and **Application Insights**.
-
-6. **Integration with External APIs**:  
-   - Collection and standardization of data from weather and traffic services.
 
 ## 🛠️ **Architectural Components**
 
@@ -48,9 +46,9 @@ Create a simple and intuitive urban assistance system that allows users to acces
 - **Serverless Architecture**: dynamic scalability to optimize costs.
 
 ### **3. Authentication with Azure Entra ID**
-- Users authenticate using Azure Entra ID.
-- Registration Flow: A link is generated for new users to register via Azure Entra ID.
-- Entra ID Integration ensures secure access to services and user verification.
+- The bot provides a login link to unauthenticated users.
+- If the user is not registered, Azure Entra ID automatically completes the registration during the login process.
+- This ensures a seamless experience, requiring only a single interaction with the login link.
 
 ### **4. Database - Azure Cosmos**
 - Storing Telegram users and their credits.
