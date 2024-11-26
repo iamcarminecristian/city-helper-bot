@@ -1,24 +1,31 @@
-from telegram import Update
-from telegram.ext import CallbackContext
+import asyncio
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from utils.cosmos_client import CosmosDBService
+from auth.auth_utils import generate_auth_url
 
 def handle(update: Update):
-    """Gestisce il comando /start"""
-    user = update.message.from_user
-    nome = user.first_name or "Utente"
-
+    user_id = update.message.from_user.id
     db_service = CosmosDBService()
-    user_data = db_service.get_user(user.id)
-    if not user_data:
-        db_service.create_user(user.id, user.username)
-    
-    return (
-        f'Ciao {nome}, benvenuto in CityHelper! 🌤️🚗\n\n'
-        'Ecco cosa posso fare per te:\n'
-        '/meteo [città] - Previsioni meteo\n'
-        '/traffico [luogo] - Situazione traffico\n'
-        '/crediti - Verifica i tuoi crediti\n'
-        '/ricarica - Ricarica i tuoi crediti\n'
-        '/help - Guida ai comandi\n\n'
-        'Scegli un comando e iniziamo!'
-    )
+
+    # Verifica se l'utente è già autenticato
+    user = db_service.get_user(user_id)
+    if user and user.get("is_authenticated", False):
+        return (
+            "Bentornato! Puoi usare i seguenti comandi:\n"
+            "/meteo [città]\n"
+            "/traffico [luogo]\n"
+            "/crediti\n"
+            "/help"
+        )
+    else:
+        auth_url = generate_auth_url(user_id)
+        keyboard = [
+            [InlineKeyboardButton("🔐 Accedi con Microsoft", url=auth_url)]
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        
+        return (
+            "Benvenuto in CityHelper! 🌤️🚗\n\n"
+            "Per utilizzare il bot, devi prima autenticarti con Azure Entra ID.",
+            reply_markup
+        )

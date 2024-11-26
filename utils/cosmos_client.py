@@ -39,11 +39,21 @@ class CosmosDBService:
                 "userId": str(user_id),
                 "username": username,
                 "crediti": 10,
+                "is_authenticated": True,
+                "auth_provider": "Azure AD",
                 "createdAt": datetime.utcnow().isoformat(),
-                "updatedAt": datetime.utcnow().isoformat()
+                "updatedAt": datetime.utcnow().isoformat(),
+                "is_authenticated": True
             })
         except exceptions.CosmosResourceExistsError:
             pass  # Utente già esistente
+
+    def update_user(self, user_id, user_data):
+        """Aggiorna i dettagli di un utente nel database"""
+        try:
+            self.container.upsert_item(user_data)
+        except exceptions.CosmosResourceNotFoundError:
+            pass  # Utente non trovato, niente da fare
 
     def get_user(self, user_id):
         """Recupera i crediti di un utente"""
