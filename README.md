@@ -1,4 +1,4 @@
-# Urban Assistance Bot 🚦🌦️
+# City Helper Bot 🚦🌦️
 
 A Telegram-based virtual assistant designed to provide real-time information on weather and traffic. This project leverages the power of **Azure** to ensure scalability, monitoring, and security.
 
@@ -20,15 +20,19 @@ Create a simple and intuitive urban assistance system that allows users to acces
    - Returns real-time updates on urban traffic conditions.
 
 3. **Credit Management**:  
-   - **Add credits**: `/recharge` (adds 20 credits).  
+   - **Add credits**: `/recharge` (adds 5 credits).  
    - **Credit consumption**: each `/weather` and `/traffic` command reduces credits by 1.  
    - Credit balance included in the responses.
 
-4. **Request Tracking**:  
+4. **Authentication via Azure Entra ID**:  
+   - Users authenticate through Azure Entra ID to access features.
+   - New users can register directly via a dedicated registration link if they are not already registered.
+
+5. **Request Tracking**:  
    - Detailed logs for user, date, and request type.  
    - Error and anomaly monitoring through **Azure Monitor** and **Application Insights**.
 
-5. **Integration with External APIs**:  
+6. **Integration with External APIs**:  
    - Collection and standardization of data from weather and traffic services.
 
 ## 🛠️ **Architectural Components**
@@ -43,14 +47,20 @@ Create a simple and intuitive urban assistance system that allows users to acces
   - Processing requests and interacting with external APIs.
 - **Serverless Architecture**: dynamic scalability to optimize costs.
 
-### **3. Database - Azure Cosmos**
+### **3. Authentication with Azure Entra ID**
+- Users authenticate using Azure Entra ID.
+- Registration Flow: A link is generated for new users to register via Azure Entra ID.
+- Entra ID Integration ensures secure access to services and user verification.
+
+### **4. Database - Azure Cosmos**
 - Storing Telegram users and their credits.
 - User identification via Telegram ID.
 
-### **4. Monitoring and Security**
+### **5. Monitoring and Security**
 - Request tracking and error handling through:
   - **Azure Monitor**
   - **Application Insights**
+- Secure handling of sensitive data via **Azure Key Vault**.
 
 ## 📦 **Requirements**
 
@@ -58,13 +68,13 @@ Create a simple and intuitive urban assistance system that allows users to acces
 Make sure to install the dependencies specified in `requirements.txt`:
 
 ```plaintext
-azure-functions==1.14.0
-azure-identity==1.13.0
-azure-keyvault-secrets==4.8.0
-azure-cosmos==4.3.0
-azure-monitor-opentelemetry==1.0.0b15
-opencensus-ext-azure==1.1.8
-opentelemetry-sdk==1.19.0
+azure-functions==1.21.3
+azure-identity==1.19.0
+azure-keyvault-secrets==4.9.0
+azure-cosmos==4.9.0
+azure-monitor-opentelemetry==1.6.4
+opencensus-ext-azure==1.1.13
+opentelemetry-sdk==1.28.2
 python-telegram-bot==20.7
 aiohttp==3.9.1
 requests==2.31.0
@@ -88,15 +98,18 @@ COSMOS-DB-URL=
 COSMOS-DB-KEY=
 OPENWEATHER-API-KEY=
 TRAFFIC-API-KEY=
+AZURE-TENANT-ID=
+AZURE-CLIENT-ID=
+AZURE-CLIENT-SECRET=
 ```
 
 ## 🧑‍💻 **Available Telegram Commands**
 
-| Command           | Description                                      | Credits Consumed |
+| Command           | Description                                      | Credits Consumed  |
 |-------------------|--------------------------------------------------|-------------------|
-| `/meteo [city]`  | Provides the weather forecast for the city.     | 1                 |
-| `/traffico [city]`  | Shows real-time traffic updates for the city.   | 1                 |
-| `/ricarica`        | Adds 20 credits to your account.                | 0                 |
+| `/meteo [city]`   | Provides the weather forecast for the city.      | 1                 |
+| `/traffico [city]`| Shows real-time traffic updates for the city.    | 1                 |
+| `/ricarica`       | Adds 5 credits to your account.                  | 0                 |
 
 ## 📊 **Monitoring**
 
@@ -107,6 +120,7 @@ TRAFFIC-API-KEY=
 
 ```plaintext
 city-helper-bot/
+├── auth/                      # Modules for authentication
 ├── commands/                  # Modules for handling specific commands
 ├── services/                  # Modules for integrating with APIs and databases
 ├── utils/                     # General helpers (e.g., logging, metrics)
@@ -144,6 +158,7 @@ city-helper-bot/
 ## 🛡️ **Security**
 
 - Credentials are stored in **Azure Key Vault**.
+- Authentication is handled via **Azure Entra ID**.
 - Request and error tracking are active via **Azure Monitor**.
 
 ## 🤝 **Contributions**
