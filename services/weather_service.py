@@ -1,12 +1,16 @@
 import requests
 
 class WeatherService:
-    def __init__(self, api_key):
+    def __init__(self, subscription_key, api_key):
         self.api_key = api_key
-        self.base_url = "https://api.openweathermap.org/data/2.5/weather"
+        self.subscription_key = subscription_key
+        self.base_url = "https://cityhelperbot.azure-api.net/weather"
 
     def get_weather(self, city):
         """Ottiene le previsioni meteo per una città"""
+        headers = {
+            "Ocp-Apim-Subscription-Key": self.subscription_key
+        }
         params = {
             'q': city,
             'appid': self.api_key,
@@ -15,7 +19,7 @@ class WeatherService:
         }
 
         try:
-            response = requests.get(self.base_url, params=params)
+            response = requests.get(self.base_url, headers=headers, params=params)
             
             # Verifica esplicita del codice 404 prima di raise_for_status
             if response.status_code == 404:

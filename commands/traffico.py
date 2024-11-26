@@ -40,7 +40,7 @@ def handle(update: Update, traffic_service: TrafficService):
             f"🚦 Situazione traffico per {luogo.capitalize()}:\n"
             f"Stato: {info_traffico['stato']}\n"
             f"Velocita media: {info_traffico['velocita_media']} km\n"
-            f"Tempo stimato di percorrenza: {info_traffico['tempo_percorrenza']} min\n"
+            f"Tempo di percorrenza: {info_traffico['tempo_percorrenza']} min\n"
         )
     except Exception as e:
         return f"Errore: {str(e)}"

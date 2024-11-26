@@ -5,10 +5,11 @@ from datetime import datetime, timedelta
 import time
 
 class TrafficService:
-    def __init__(self, api_key):
+    def __init__(self, subscription_key, api_key):
         self.api_key = api_key
-        self.base_url_geocode = "https://atlas.microsoft.com/search/address/json"
-        self.base_url_traffic = "https://atlas.microsoft.com/traffic/flow/segment/json"
+        self.subscription_key = subscription_key
+        self.base_url_geocode = "https://cityhelperbot.azure-api.net/azure-maps/search/address/json"
+        self.base_url_traffic = "https://cityhelperbot.azure-api.net/azure-maps/traffic/flow/segment/json"
 
     def get_traffic_status(self, location):
         """Ottiene lo stato del traffico per una posizione"""
@@ -33,6 +34,9 @@ class TrafficService:
 
     def _get_coordinates(self, location):
         """Ottiene le coordinate geografiche di una località"""
+        headers = {
+            "Ocp-Apim-Subscription-Key": self.subscription_key
+        }
         params = {
             'api-version': '1.0',
             'query': location,
@@ -40,7 +44,7 @@ class TrafficService:
         }
 
         try:
-            response = requests.get(self.base_url_geocode, params=params)
+            response = requests.get(self.base_url_geocode, headers=headers, params=params)
             response.raise_for_status()
 
             data = response.json()
@@ -57,6 +61,9 @@ class TrafficService:
 
     def _get_traffic_data(self, coordinates):
         """Recupera i dati del traffico dalle coordinate"""
+        headers = {
+            "Ocp-Apim-Subscription-Key": self.subscription_key
+        }
         params = {
             'api-version': '1.0',
             'style': 'absolute',
@@ -66,12 +73,12 @@ class TrafficService:
         }
     
         try:
-            response = requests.get(self.base_url_traffic, params=params)
+            response = requests.get(self.base_url_traffic, headers=headers, params=params)
     
             if response.status_code == 404:
                 return {
                     'stato': 'Nessun dato di traffico disponibile',
-                    'velocita_media': 0,
+                    'velocita_media': 'N/D',
                     'tempo_percorrenza': 'N/D'
                 }
     
@@ -84,23 +91,22 @@ class TrafficService:
                 # Estrai le informazioni specifiche dal flowSegmentData
                 flow_data = traffic_info['flowSegmentData']
     
-                # Queste variabili sono quelle che stiamo cercando
                 stato = "Traffico in tempo reale"
-                velocita_media = flow_data['currentSpeed']  # Velocità attuale (in km/h)
-                tempo_percorrenza = flow_data['currentTravelTime']  # Tempo di percorrenza attuale in secondi
+                velocita_media = flow_data.get('currentSpeed', 'N/D')           # Velocità attuale (in km/h)
+                tempo_percorrenza = flow_data.get('currentTravelTime', 'N/D')   # Tempo di percorrenza attuale in secondi
     
                 # Calcoliamo il tempo di percorrenza in minuti
-                tempo_percorrenza_min = round(tempo_percorrenza / 60)  # Converto i secondi in minuti
+                tempo_percorrenza_min = round(tempo_percorrenza / 60)
     
                 return {
                     'stato': stato,
-                    'velocita_media': velocita_media,  # Ora la velocità è espressa in km/h
+                    'velocita_media': velocita_media,
                     'tempo_percorrenza': tempo_percorrenza_min
                 }
             else:
                 return {
                     'stato': 'Dati di traffico insufficienti',
-                    'velocita_media': 0,
+                    'velocita_media': 'N/D',
                     'tempo_percorrenza': 'N/D'
                 }
     
@@ -108,6 +114,6 @@ class TrafficService:
             print(f"Errore nel recupero dati traffico: {e}")
             return {
                 'stato': 'Errore nel recupero dati traffico',
-                'rallentamenti': 0,
+                'rallentamenti': 'N/D',
                 'tempo_percorrenza': 'N/D'
             }

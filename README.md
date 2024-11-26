@@ -99,6 +99,7 @@ TRAFFIC-API-KEY=
 AZURE-TENANT-ID=
 AZURE-CLIENT-ID=
 AZURE-CLIENT-SECRET=
+SUBSCRIPTION-API-KEY=
 ```
 
 ## 🧑‍💻 **Available Telegram Commands**

@@ -20,9 +20,11 @@ logger = logging_utility.get_logger()
 
 # Inizializza servizi
 weather_service = WeatherService(
+    secret_manager.get_secret('SUBSCRIPTION-API-KEY'),
     secret_manager.get_secret('OPENWEATHER-API-KEY')
 )
 traffic_service = TrafficService(
+    secret_manager.get_secret('SUBSCRIPTION-API-KEY'),
     secret_manager.get_secret('TRAFFIC-API-KEY')
 )
 
