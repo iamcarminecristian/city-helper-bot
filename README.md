@@ -35,6 +35,8 @@ Create a simple and intuitive urban assistance system that allows users to acces
 
 ## 🛠️ **Architectural Components**
 
+![Architecture](Architettura_CityHelperBot.png)
+
 ### **1. Frontend - Telegram Bot**
 - Direct interaction with the user via commands.
 - Use of custom webhooks to handle communication with the backend on **Azure**.
